@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>聖經丨高雄錫安堂</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..600;1,400..600&family=Noto+Serif+TC:wght@300;400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#8E5A36">
+</head>
+<body>
+
+  <!-- 頂部導航列 -->
+  <nav class="navbar">
+    <div class="nav-brand">聖經BIBLE</div>
+    
+    <div class="nav-center">
+      <div class="search-bar-container">
+        <span class="search-icon">⚲</span>
+        <input type="text" id="directSearchInput" placeholder="檢索經文（如：創22、太5:16）..." autocomplete="off" />
+        <div id="quickSearchResults" class="quick-search-dropdown hidden"></div>
+      </div>
+    </div>
+
+    <div class="nav-controls">
+      <div class="selector-group">
+        <select id="bookSelector" aria-label="選擇書卷"></select>
+        <select id="chapterSelector" aria-label="選擇章節"></select>
+        <!-- 宣教雙語語言切換 -->
+        <select id="parallelLangSelector" aria-label="對照語言" title="宣教對照語言">
+          <option value="none">和合本</option>
+          <option value="id">印尼文 (TB)</option>
+          <option value="en">英文 (KJV)</option>
+          <option value="vi">越南文 (1925)</option>
+        </select>
+      </div>
+      <button id="themeToggleBtn" class="theme-icon-btn" title="切換日夜模式">
+        <span class="theme-mode-indicator"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- 閱讀核心容器 -->
+  <main class="reader-container" id="readerContainer">
+    <header class="chapter-header">
+      <h1 id="displayBookTitle" class="book-title">加載中...</h1>
+      <div id="displayChapterEn" class="chapter-subtitle"></div>
+    </header>
+
+    <article id="scriptureContent" class="scripture-content"></article>
+
+    <footer class="chapter-pagination">
+      <button id="prevBtn" class="page-btn">上一章</button>
+      <button id="nextBtn" class="page-btn">下一章</button>
+    </footer>
+  </main>
+
+    <div class="floating-pagination" aria-label="快速翻頁">
+      <button id="floatingPrevBtn" class="floating-page-btn" type="button" aria-label="上一章" title="上一章">←</button>
+      <button id="floatingNextBtn" class="floating-page-btn" type="button" aria-label="下一章" title="下一章">→</button>
+    </div>
+
+  <!-- 經文浮動工具列 -->
+  <div id="verseToolbar" class="verse-toolbar hidden">
+    <button id="speakBtn" class="toolbar-btn">🔊 朗讀</button>
+    <button id="speakChapterBtn" class="toolbar-btn">🔊 朗讀本章</button>
+    <button id="highlightBtn" class="tb-btn">🖍️ 劃線</button>
+    <button id="noteBtn" class="tb-btn">📝 筆記</button>
+    <button id="cardBtn" class="tb-btn">🖼️ 製圖</button>
+  </div>
+
+  <!-- 筆記彈窗 -->
+  <div id="noteModal" class="note-modal hidden">
+    <div class="note-modal-backdrop" id="noteBackdrop"></div>
+    <div class="note-modal-content">
+      <div class="note-header">
+        <div id="noteVerseRef" class="note-title">經文筆記</div>
+        <button id="noteCloseBtn" class="modal-close-btn">&times;</button>
+      </div>
+      <textarea id="noteInput" placeholder="寫下這節經文的感動或心得..." rows="4"></textarea>
+      <div class="note-footer">
+        <button id="deleteNoteBtn" class="note-action-btn delete-btn">刪除筆記</button>
+        <button id="saveNoteBtn" class="note-action-btn save-btn">儲存筆記</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 經文金句卡設計彈窗 -->
+  <div id="cardModal" class="note-modal hidden">
+    <div class="note-modal-backdrop" id="cardBackdrop"></div>
+    <div class="note-modal-content card-modal-content">
+      <div class="note-header">
+        <div class="note-title">經文金句卡分享</div>
+        <button id="cardCloseBtn" class="modal-close-btn">&times;</button>
+      </div>
+
+      <div class="card-preview-wrapper">
+        <img id="cardPreviewImg" alt="金句卡片預覽" />
+      </div>
+
+      <div class="card-template-bar">
+        <div class="template-chips">
+          <button class="tpl-chip active" data-template="parchment">📜 羊皮紙</button>
+          <button class="tpl-chip" data-template="forest">🌲 山林曠野</button>
+          <button class="tpl-chip" data-template="sky">🌊 天際晴空</button>
+          <button class="tpl-chip" data-template="cyber">⚙️ 未來機械</button>
+          <button class="tpl-chip" data-template="midnight">🌑 午夜金輝</button>
+          <button class="tpl-chip" data-template="dawn">🌅 晨曦微光</button>
+          <button class="tpl-chip" data-template="olive">🌿 大地橄欖</button>
+          <label class="tpl-chip upload-chip">
+            📷 自訂背景
+            <input type="file" id="customBgInput" accept="image/*" style="display: none;" />
+          </label>
+        </div>
+      </div>
+
+      <div class="card-action-footer">
+        <button id="downloadCardBtn" class="note-action-btn secondary-btn">💾 存為圖片</button>
+        <button id="shareCardBtn" class="note-action-btn share-primary-btn">🚀 分享至群組</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 繪圖畫布 -->
+  <canvas id="cardCanvas" style="display: none;"></canvas>
+
+  <div id="toast" class="toast hidden">已複製金句！</div>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
+    }
+  </script>
+</body>
+</html>
